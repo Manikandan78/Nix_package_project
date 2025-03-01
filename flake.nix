@@ -1,7 +1,34 @@
------BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACADWT60ch2kVbp1a6DG/F5E3YZ0lEbxfC2CG1SbQzQ7TQAAAKDdx+5M3cfu
-TAAAAAtzc2gtZWQyNTUxOQAAACADWT60ch2kVbp1a6DG/F5E3YZ0lEbxfC2CG1SbQzQ7TQ
-AAAEBrh6DiEH1QPdTgxdaQbWYYbAB9/Z+KRpEmY5IPb7+XKANZPrRyHaRVunVroMb8XkTd
-hnSURvF8LYIbVJtDNDtNAAAAHW1hbmlrYW5kYW5wZXJ1bWFsMDBAZ21haWwuY29t
------END OPENSSH PRIVATE KEY-----
+{
+  description = "Automated Python, PostgreSQL, and Nginx setup using Nix Flakes";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";  # Get the latest Nix package set
+  };
+
+  outputs = { self, nixpkgs }: {
+    devShells.x86_64-linux.default = let
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+
+      python = pkgs.python311;
+      postgres = pkgs.postgresql_15;
+      nginx = pkgs.nginx;
+      git = pkgs.git;
+
+    in pkgs.mkShell {
+      name = "python-postgres-nginx-env";
+
+      buildInputs = [ python postgres nginx git ];
+
+      shellHook = ''
+        echo " Checking System Information..."
+        echo "OS: $(uname -a)"
+        echo "Python Version: $(python3 --version)"
+        echo "PostgreSQL Version: $(psql --version)"
+        echo "Nginx Version: $(nginx -v 2>&1)"
+
+        echo " Environment is ready!"
+      '';
+    };
+  };
+}
+

@@ -6,7 +6,7 @@ INSTALL_DIR="$HOME/myproject"
 
 echo "🔹 Cloning repository..."
 if [ -d "$INSTALL_DIR" ]; then
-    echo "⚠️ Repository already exists. Pulling latest updates..."
+    echo "Repository already exists. Pulling latest updates..."
     cd "$INSTALL_DIR" && git pull
 else
     git clone "$REPO_URL" "$INSTALL_DIR"
@@ -16,11 +16,11 @@ fi
 # Step 2: Install Nix if Not Installed
 echo "🔹 Checking if Nix is installed..."
 if ! command -v nix &> /dev/null; then
-    echo "⚠️ Nix is NOT installed. Installing Nix..."
+    echo "Nix is NOT installed. Installing Nix..."
     curl -L https://nixos.org/nix/install | sh
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 else
-    echo "✅ Nix is already installed."
+    echo " Nix is already installed."
 fi
 
 # Step 3: Set Up Environment Using Flakes
@@ -33,9 +33,10 @@ chmod +x install-requirements.sh
 ./install-requirements.sh
 
 # Step 5: Start the Application
-echo "🚀 Starting the application..."
+echo " Starting the application..."
 source myenv/bin/activate
 python api.py &  # Run in the background
 
-echo "✅ Setup complete! Your application is running."
+echo " Setup complete! Your application is running."
+
 
